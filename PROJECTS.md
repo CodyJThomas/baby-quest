@@ -1,0 +1,39 @@
+# Baby Quest — Project Tracker
+Updated 2026-04-07
+
+---
+
+## In Progress
+
+| Project | Priority | Status | Next Action |
+|---|---|---|---|
+| Repo scaffold | high | done | Push to GitHub, initialize Next.js |
+| Recipient story draft | high | draft ready | Ro reviews → submit to BabyQuest |
+| Ambassador program scope | high | pending | Cody emails Pamela |
+| Cassie consultation | high | pending | Cody calls Cassie |
+
+---
+
+## Planned
+
+| Project | Priority | Notes |
+|---|---|---|
+| Supabase `babyquest` schema | high | Create after Pamela conversation |
+| Next.js web app | high | Initialize web/ once schema is designed |
+| Faceless video — IVF Access Gap | high | Script first, then produce |
+| Donor email sequence | medium | 5 emails, Google Doc → Pamela |
+| Local media pitch | medium | Coordinate with Pamela first |
+| Grant cycle countdown microsite | medium | Post-web-app init |
+| Public impact dashboard | medium | Needs BabyQuest data agreement |
+| Volleyball tournament | medium | Date TBD pending Pamela |
+| Email capture landing page | medium | Phase 3 |
+
+---
+
+## Done
+
+| Project | Completed |
+|---|---|
+| Strategic plan (awareness + fundraising + donor base) | 2026-04-07 |
+| Repo scaffold (CLAUDE.md, TODOS, BACKLOG, PROJECTS, content/) | 2026-04-07 |
+| Recipient story first draft | 2026-04-07 |
