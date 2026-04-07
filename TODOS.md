@@ -3,6 +3,13 @@ Updated 2026-04-07
 
 ---
 
+## Tomorrow — 2026-04-08
+1. **Push baby-quest commits to origin** — 2 commits ahead (`b13f16d`, `fc978fd`)
+2. **Run first live ingest** — say "run a research sweep" to fire `bq-researcher`; spawns mandate + policy ingesters in parallel against RESOLVE, Congress.gov
+3. **Phase 4 migrations** — media/social layer: `news_articles`, `social_accounts`, `media_outreach`, `publications`, `source_citations` + analytics materialized views
+
+---
+
 ## Immediate (This Week — Cody handles personally)
 
 - [ ] **Call/email Cassie Ferguson** — get her read on BabyQuest, DTFA parallels,
@@ -20,20 +27,25 @@ Updated 2026-04-07
   - Adjust any details she wants changed
   - Once approved: submit to BabyQuest for their "recipient stories" feature
 
-- [ ] **Create GitHub repo** — `CodyJThomas/baby-quest` (private)
-  - Push this scaffold
-  - Add to RoCo project tracker
+- [x] **Create GitHub repo** — `CodyJThomas/baby-quest` (private) — done 2026-04-07
+  - 2 commits ahead of origin; push when ready
 
 - [ ] **Initialize Next.js web app** — `cd web && npx create-next-app@latest .`
   - Same stack as life-hub: TypeScript, Tailwind, App Router
   - Connect to Supabase `babyquest` schema
 
-- [ ] **Create Supabase `babyquest` schema + core tables**
-  - `grant_cycles` — deadline dates, funding gap, awards count
-  - `content_calendar` — drafts, scheduled posts, campaign timing
-  - `media_outreach` — journalist contacts, pitch status, publication targets
-  - `events` — tournament, fundraisers, appearances
-  - `fertility_stats` — research data for content and data storytelling
+- [x] **Create Supabase `babyquest` schema + research foundation** — done 2026-04-07
+  - 11 migrations, 23 tables: sources (citation spine), domains, tags, states, metros,
+    organizations (20 seeded), policy_jurisdictions (52), legislation, insurance_mandates,
+    fertility_stat_series (12 seeded), fertility_stats, clinics, clinic_outcomes,
+    clinic_physicians, people (3 seeded), agent_runs, data_quality_flags
+  - Phase 4 remaining: news_articles, social_accounts, media_outreach, publications,
+    source_citations, analytics materialized views
+
+- [ ] **Initialize Next.js web app** — `cd web && npx create-next-app@latest .`
+  - Same stack as life-hub: TypeScript, Tailwind, App Router
+  - Connect to Supabase `babyquest` schema
+  - Hold until first agent ingest validates the data model
 
 ---
 
