@@ -3,10 +3,10 @@ Updated 2026-04-07
 
 ---
 
-## Next Session
-1. **Refresh materialized views** after research sweep completes — run 5 REFRESH commands in order (see migration 013 comments)
-2. **Review sweep results** — mandates × 50 states, federal + state legislation, Ohio profile, access gap stats
-3. **Phase 5 planning** — bq-news-ingester agent (mirrors research-hub RSS pattern), clinic data ingest
+## Tomorrow — 2026-04-09
+1. **Draft first faceless video script** — Ohio vs. East North Central regional angle; data in DB (238K cycles, 51.8% LBR under 35, Ohio 900/million vs IL 2600/million); script format: 8-10 min YouTube + 60-sec Reels cut
+2. **Download CDC NASS 2022 Excel → drop in data/cdc-nass/ → run bq-stat-ingester** — real numbers replace training-knowledge rows (all currently is_preliminary=true)
+3. **Deploy baby-quest app to Vercel** — build is clean; get a real URL for Pamela outreach
 
 ---
 

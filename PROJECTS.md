@@ -1,5 +1,5 @@
 # Baby Quest — Project Tracker
-Updated 2026-04-07
+Updated 2026-04-08
 
 ---
 
@@ -7,10 +7,12 @@ Updated 2026-04-07
 
 | Project | Priority | Status | Next Action |
 |---|---|---|---|
-| Repo scaffold | high | done | Push 2 commits to origin (b13f16d, fc978fd) |
+| Next.js web app | high | initialized, build clean | Deploy to Vercel for shareable URL |
 | Recipient story draft | high | draft ready | Ro reviews → submit to BabyQuest |
 | Ambassador program scope | high | pending | Cody emails Pamela |
 | Cassie consultation | high | pending | Cody calls Cassie |
+| First faceless video | high | data ready, script not started | Draft script next session |
+| CDC NASS real data | high | 25 rows preliminary | Download 2022 Excel → run bq-stat-ingester |
 
 ---
 
