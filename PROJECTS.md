@@ -18,7 +18,7 @@ Updated 2026-04-07
 
 | Project | Priority | Notes |
 |---|---|---|
-| Supabase `babyquest` schema | high | Phase 1-3 complete (23 tables, 11 migrations). Phase 4 next: media/social/analytics views. |
+| Supabase `babyquest` schema | high | Phase 4 complete (13 migrations, 27 tables + 5 materialized views). First research sweep running. Phase 5 next: bq-news-ingester, clinic data. |
 | Next.js web app | high | Initialize web/ once schema is designed |
 | Faceless video — IVF Access Gap | high | Script first, then produce |
 | Donor email sequence | medium | 5 emails, Google Doc → Pamela |

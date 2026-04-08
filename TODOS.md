@@ -3,10 +3,10 @@ Updated 2026-04-07
 
 ---
 
-## Tomorrow — 2026-04-08
-1. **Push baby-quest commits to origin** — 2 commits ahead (`b13f16d`, `fc978fd`)
-2. **Run first live ingest** — say "run a research sweep" to fire `bq-researcher`; spawns mandate + policy ingesters in parallel against RESOLVE, Congress.gov
-3. **Phase 4 migrations** — media/social layer: `news_articles`, `social_accounts`, `media_outreach`, `publications`, `source_citations` + analytics materialized views
+## Next Session
+1. **Refresh materialized views** after research sweep completes — run 5 REFRESH commands in order (see migration 013 comments)
+2. **Review sweep results** — mandates × 50 states, federal + state legislation, Ohio profile, access gap stats
+3. **Phase 5 planning** — bq-news-ingester agent (mirrors research-hub RSS pattern), clinic data ingest
 
 ---
 
