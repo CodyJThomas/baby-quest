@@ -1,258 +1,226 @@
-import { createServiceClient } from '@/lib/supabase'
+import Link from 'next/link'
 
-async function getAccessGap() {
-  const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_access_gap')
-    .select('*')
-    .single()
-  return data
-}
+const BQ_BLUE = '#3bbfbe'
+const BQ_CHARCOAL = '#32373c'
 
-async function getOhioProfile() {
-  const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_ohio_profile')
-    .select('*')
-    .single()
-  return data
-}
+const STATS = [
+  {
+    value: '1 in 8',
+    label: 'Couples experience infertility',
+    source: 'NCHS, 2015–2019',
+    hexColor: BQ_BLUE,
+    detail: '9.7 million women ages 15–49 have impaired fecundity.',
+  },
+  {
+    value: '1.6%',
+    label: 'Of women have accessed IVF or ART',
+    source: 'NCHS, 2022–2023',
+    hexColor: '#d97706',
+    detail: 'Fewer than 2 in 100 women have reached the treatment most likely to work.',
+  },
+  {
+    value: '$15,000',
+    label: 'Average cost per IVF cycle, uninsured',
+    source: 'RESOLVE estimate',
+    hexColor: '#dc2626',
+    detail: 'Ohio has no IVF coverage mandate. Most cycles are paid entirely out of pocket.',
+  },
+]
 
-async function getLegislation() {
-  const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_legislation_tracker')
-    .select('*')
-    .order('last_action_date', { ascending: false })
-    .limit(6)
-  return data ?? []
-}
+const ACCESS_FACTS = [
+  {
+    stat: '5×',
+    label: 'More likely to use IVF with private insurance vs. public',
+    detail: '13.6% private insurance vs. 4.4% public coverage',
+  },
+  {
+    stat: '3×',
+    label: 'More likely to use IVF in highest vs. lowest income bracket',
+    detail: '14.8% top income bracket vs. 5.0% lowest',
+  },
+  {
+    stat: '~19',
+    label: 'States with any insurance mandate for infertility',
+    detail: 'Most cover diagnostics only. Fewer than 20 require IVF coverage.',
+  },
+]
 
-async function getMandateSummary() {
-  const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_mandate_summary')
-    .select('usps_code, state_name, has_mandate, coverage_level, covers_ivf, region')
-    .order('state_name')
-  return data ?? []
-}
-
-export default async function Home() {
-  const [gap, ohio, legislation, mandates] = await Promise.all([
-    getAccessGap(),
-    getOhioProfile(),
-    getLegislation(),
-    getMandateSummary(),
-  ])
-
-  const coverageLevelLabel: Record<string, string> = {
-    full_treatment: 'Full Coverage',
-    limited_treatment: 'Limited',
-    diagnostics_only: 'Diagnostics Only',
-    none: 'No Mandate',
-  }
-
-  const coverageLevelColor: Record<string, string> = {
-    full_treatment: 'bg-emerald-500',
-    limited_treatment: 'bg-amber-400',
-    diagnostics_only: 'bg-orange-400',
-    none: 'bg-red-400',
-  }
-
+export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      {/* Header */}
-      <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight">BabyQuest Research</h1>
-          <p className="text-xs text-slate-400">Fertility Access Intelligence Platform</p>
+    <main className="min-h-screen bg-white text-[#666666]">
+
+      {/* Hero */}
+      <section className="max-w-4xl mx-auto px-6 pt-12 pb-10 md:pt-20 md:pb-16">
+        <div className="mb-6">
+          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: BQ_BLUE }}>
+            BabyQuest Foundation — Spring 2026 Recipients
+          </span>
         </div>
-        <a
-          href="https://babyquestfoundation.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-slate-400 hover:text-white transition-colors"
-        >
-          babyquestfoundation.org ↗
-        </a>
-      </header>
+        <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-6 text-[#333333]">
+          Infertility isn&apos;t rare.
+          <br />
+          <span style={{ color: BQ_BLUE }}>Access to treatment is.</span>
+        </h1>
+        <p className="text-lg text-[#666666] max-w-2xl leading-relaxed mb-8">
+          Cody and Rochelle Thomas are IVF patients in Lakewood, Ohio — and Spring 2026 grant
+          recipients of BabyQuest Foundation. We&apos;re building this platform to make the case
+          that no couple should have to choose between starting a family and financial ruin.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a
+            href="https://babyquestfoundation.org/donate"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-opacity hover:opacity-90 text-sm"
+            style={{ backgroundColor: BQ_BLUE }}
+          >
+            Donate to BabyQuest Foundation ↗
+          </a>
+          <Link
+            href="/data"
+            className="inline-flex items-center justify-center px-6 py-3 border-2 font-medium rounded-lg transition-colors text-sm hover:text-[#3bbfbe] hover:border-[#3bbfbe]"
+            style={{ borderColor: BQ_CHARCOAL, color: BQ_CHARCOAL }}
+          >
+            Explore the data →
+          </Link>
+        </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
-
-        {/* Hero stat row */}
-        <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
-            US IVF Access Gap
+      {/* The numbers */}
+      <section className="border-t border-[#e8e8e8] bg-[#f9f9f9]">
+        <div className="max-w-4xl mx-auto px-6 py-14">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-8">
+            The scale of the problem
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard
-              value={gap?.states_without_mandate ?? '—'}
-              label="States with no IVF mandate"
-              sub="out of 51"
-              color="text-red-400"
-            />
-            <StatCard
-              value={gap?.states_covering_ivf ?? '—'}
-              label="States that actually cover IVF"
-              sub={gap ? `${gap.pct_states_with_mandate}% of states` : ''}
-              color="text-emerald-400"
-            />
-            <StatCard
-              value={gap?.states_with_mandate ?? '—'}
-              label="States with any mandate"
-              sub="many cover diagnosis only"
-              color="text-amber-400"
-            />
-            <StatCard
-              value="$15,000"
-              label="Average out-of-pocket IVF cost"
-              sub="per cycle, uninsured"
-              color="text-white"
-            />
-          </div>
-        </section>
-
-        {/* Ohio profile */}
-        <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
-            Ohio — Our Home State
-          </h2>
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 grid md:grid-cols-3 gap-6">
-            <div>
-              <p className="text-xs text-slate-400 mb-1">Mandate Status</p>
-              <p className="text-xl font-bold text-amber-400">
-                {ohio?.has_mandate ? 'Mandate — but no IVF' : 'No Mandate'}
-              </p>
-              <p className="text-xs text-slate-400 mt-1">
-                Ohio requires HMOs to offer an optional infertility rider — but IVF is not covered.
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 mb-1">Active OH Legislation</p>
-              <p className="text-xl font-bold text-sky-400">
-                {ohio?.active_oh_bills ?? 0} bill{ohio?.active_oh_bills !== 1 ? 's' : ''}
-              </p>
-              <p className="text-xs text-slate-400 mt-1">
-                {ohio?.favorable_oh_bills ?? 0} favorable · {ohio?.restrictive_oh_bills ?? 0} restrictive
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 mb-1">Ohio HB 38</p>
-              <p className="text-sm font-medium text-white">IVF Insurance Coverage Act</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Would mandate full IVF coverage for employers with 25+ employees.
-                Currently in House Insurance Committee.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Legislation tracker */}
-        {legislation.length > 0 && (
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
-              Active Legislation
-            </h2>
-            <div className="space-y-3">
-              {legislation.map((bill: any) => (
-                <div
-                  key={`${bill.bill_number}-${bill.jurisdiction_name}`}
-                  className="rounded-lg border border-slate-800 bg-slate-900 px-5 py-4 flex items-start justify-between gap-4"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-slate-400">{bill.bill_number}</span>
-                      <span className="text-xs text-slate-500">·</span>
-                      <span className="text-xs text-slate-400">{bill.jurisdiction_name}</span>
-                    </div>
-                    <p className="text-sm font-medium text-white truncate">{bill.short_title ?? bill.title}</p>
-                    {bill.summary && (
-                      <p className="text-xs text-slate-400 mt-1 line-clamp-2">{bill.summary}</p>
-                    )}
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      bill.ivf_favorable === true
-                        ? 'bg-emerald-900 text-emerald-300'
-                        : bill.ivf_favorable === false
-                        ? 'bg-red-900 text-red-300'
-                        : 'bg-slate-800 text-slate-400'
-                    }`}>
-                      {bill.ivf_favorable === true ? '✓ Favorable' : bill.ivf_favorable === false ? '✗ Restrictive' : 'Neutral'}
-                    </span>
-                    <span className="text-xs text-slate-500 capitalize">{bill.status?.replace(/_/g, ' ')}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* State mandate grid */}
-        <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
-            State Mandate Map — {mandates.length} States
-          </h2>
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-            {mandates.map((state: any) => (
+          <div className="grid md:grid-cols-3 gap-6">
+            {STATS.map((s) => (
               <div
-                key={state.usps_code}
-                className="rounded-lg p-2 bg-slate-900 border border-slate-800 text-center"
-                title={`${state.state_name}: ${coverageLevelLabel[state.coverage_level] ?? 'Unknown'}`}
+                key={s.label}
+                className="rounded-xl border border-[#e8e8e8] bg-white p-6 shadow-sm"
               >
-                <div className="text-xs font-bold text-white mb-1">{state.usps_code}</div>
-                <div className={`w-2 h-2 rounded-full mx-auto ${coverageLevelColor[state.coverage_level] ?? 'bg-slate-600'}`} />
+                <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: s.hexColor }}>
+                  {s.value}
+                </p>
+                <p className="text-sm font-semibold text-[#333333] mb-2">{s.label}</p>
+                <p className="text-xs text-[#666666] leading-relaxed mb-3">{s.detail}</p>
+                <p className="text-xs text-[#aaaaaa] font-mono">Source: {s.source}</p>
               </div>
             ))}
           </div>
-          <div className="flex flex-wrap items-center gap-5 mt-4">
-            {Object.entries(coverageLevelLabel).map(([level, label]) => (
-              <div key={level} className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full ${coverageLevelColor[level]}`} />
-                <span className="text-xs text-slate-400">{label}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Footer */}
-        <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500">
-          <p>
-            Data: CDC ART Surveillance (NASS), RESOLVE State Mandate Tracker, NCSL, Congress.gov.
-            {gap?.data_as_of && ` Mandate data as of ${new Date(gap.data_as_of).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.`}
-          </p>
-          <p className="mt-1">
-            Built by Cody and Rochelle Thomas — BabyQuest Spring 2026 grant recipients — in support of{' '}
-            <a href="https://babyquestfoundation.org" className="underline hover:text-white">
-              BabyQuest Foundation
-            </a>.
-          </p>
-        </footer>
-      </div>
+      {/* Access gap */}
+      <section className="max-w-4xl mx-auto px-6 py-14">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-2">
+          The access gap
+        </h2>
+        <p className="text-[#666666] mb-8 max-w-2xl">
+          The same medical need produces very different outcomes depending on income, insurance, and
+          zip code. That&apos;s not a medical problem — it&apos;s a policy problem.
+        </p>
+        <div className="grid md:grid-cols-3 gap-5">
+          {ACCESS_FACTS.map((f) => (
+            <div
+              key={f.label}
+              className="rounded-xl border border-[#e8e8e8] bg-white p-5 shadow-sm"
+            >
+              <p className="text-3xl font-bold text-[#333333] mb-2">{f.stat}</p>
+              <p className="text-sm text-[#333333] font-medium mb-1">{f.label}</p>
+              <p className="text-xs text-[#999999]">{f.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* About BabyQuest */}
+      <section className="border-t border-[#e8e8e8] bg-[#f9f9f9]">
+        <div className="max-w-4xl mx-auto px-6 py-14 grid md:grid-cols-2 gap-12 items-start">
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
+              About BabyQuest Foundation
+            </h2>
+            <p className="text-[#666666] leading-relaxed mb-4">
+              BabyQuest Foundation is a 501(c)(3) nonprofit that provides IVF and fertility
+              treatment grants to individuals and couples who cannot afford care. Founded by
+              Pamela Cohen Hirsch, BabyQuest has helped hundreds of families build the families
+              they&apos;ve dreamed of.
+            </p>
+            <p className="text-[#666666] leading-relaxed mb-6">
+              Two grant cycles are offered each year — Spring (June deadline) and Fall (September
+              deadline). Applications are reviewed on demonstrated financial need and medical
+              eligibility.
+            </p>
+            <a
+              href="https://babyquestfoundation.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline transition-opacity hover:opacity-80"
+              style={{ color: BQ_BLUE }}
+            >
+              Learn more at babyquestfoundation.org ↗
+            </a>
+          </div>
+          <div className="rounded-xl border border-[#e8e8e8] bg-white p-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
+              Grant cycles — 2026
+            </p>
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: BQ_BLUE }} />
+                  <span className="text-sm font-semibold text-[#333333]">Spring 2026</span>
+                  <span className="text-xs text-[#999999] ml-auto">Applications closed</span>
+                </div>
+                <p className="text-xs text-[#888888] pl-4">Deadline: June 8, 2026</p>
+              </div>
+              <div className="border-t border-[#e8e8e8] pt-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-[#cccccc]" />
+                  <span className="text-sm font-semibold text-[#333333]">Fall 2026</span>
+                  <span className="text-xs text-amber-600 ml-auto">Opens soon</span>
+                </div>
+                <p className="text-xs text-[#888888] pl-4">Deadline: September 10, 2026</p>
+              </div>
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#e8e8e8]">
+              <a
+                href="https://babyquestfoundation.org/donate"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center px-5 py-2.5 text-white text-sm font-semibold rounded-lg transition-opacity hover:opacity-90"
+                style={{ backgroundColor: BQ_BLUE }}
+              >
+                Support a grant recipient →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-[#e8e8e8] max-w-4xl mx-auto px-6 py-8 text-xs text-[#aaaaaa]">
+        <p>
+          Built by Cody and Rochelle Thomas — BabyQuest Spring 2026 grant recipients — in support
+          of{' '}
+          <a
+            href="https://babyquestfoundation.org"
+            className="underline hover:text-[#3bbfbe] transition-colors"
+          >
+            BabyQuest Foundation
+          </a>
+          .
+        </p>
+        <p className="mt-1">
+          Data: NCHS National Survey of Family Growth (2022–2023 and 2015–2019), RESOLVE, CDC ART
+          Surveillance System.
+        </p>
+        <p className="mt-2">
+          <Link href="/data" className="underline hover:text-[#3bbfbe] transition-colors">
+            Research data →
+          </Link>
+        </p>
+      </footer>
     </main>
-  )
-}
-
-function StatCard({
-  value,
-  label,
-  sub,
-  color,
-}: {
-  value: string | number
-  label: string
-  sub?: string
-  color: string
-}) {
-  return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-      <p className={`text-3xl font-bold tabular-nums ${color}`}>{value}</p>
-      <p className="text-sm text-white mt-1">{label}</p>
-      {sub && <p className="text-xs text-slate-500 mt-0.5">{sub}</p>}
-    </div>
   )
 }
