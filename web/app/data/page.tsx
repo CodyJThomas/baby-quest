@@ -1,22 +1,18 @@
 import { createServiceClient } from '@/lib/supabase'
+import Link from 'next/link'
+
+const BQ_TEAL = '#3bbfbe'
+const EYEBROW = 'text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#595959]'
 
 async function getAccessGap() {
   const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_access_gap')
-    .select('*')
-    .single()
+  const { data } = await supabase.schema('babyquest').from('mv_access_gap').select('*').single()
   return data
 }
 
 async function getOhioProfile() {
   const supabase = createServiceClient()
-  const { data } = await supabase
-    .schema('babyquest')
-    .from('mv_ohio_profile')
-    .select('*')
-    .single()
+  const { data } = await supabase.schema('babyquest').from('mv_ohio_profile').select('*').single()
   return data
 }
 
@@ -41,12 +37,24 @@ async function getMandateSummary() {
   return data ?? []
 }
 
-export default async function Home() {
-  const [gap, ohio, legislation, mandates] = await Promise.all([
+async function getOhioStats() {
+  const supabase = createServiceClient()
+  const { data } = await supabase
+    .schema('babyquest')
+    .from('fertility_stats')
+    .select('metric_name, value, unit, geo_name')
+    .eq('geo_level', 'state')
+    .order('geo_name')
+  return data ?? []
+}
+
+export default async function DataPage() {
+  const [gap, ohio, legislation, mandates, stateStats] = await Promise.all([
     getAccessGap(),
     getOhioProfile(),
     getLegislation(),
     getMandateSummary(),
+    getOhioStats(),
   ])
 
   const coverageLevelLabel: Record<string, string> = {
@@ -63,39 +71,54 @@ export default async function Home() {
     none: 'bg-red-400',
   }
 
+  // Build state comparison: cycles per million, all seeded states
+  const cyclesPerMillion = stateStats
+    .filter((s) => s.metric_name === 'cycles_per_million')
+    .sort((a, b) => (b.value as number) - (a.value as number))
+
+  const maxCycles = Math.max(...cyclesPerMillion.map((s) => s.value as number), 1)
+
   return (
     <main className="min-h-screen bg-white text-[#666666]">
+      <div className="max-w-6xl mx-auto px-6 py-10 space-y-12">
 
-      <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+        {/* Page header */}
+        <section className="border-b border-[#e8e8e8] pb-6">
+          <p className={`${EYEBROW} mb-2`}>Fertility Access Intelligence</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#333333] mb-2">Research Data</h1>
+          <p className="text-[#666666] max-w-2xl">
+            Live data on IVF insurance mandates, state access gaps, and active legislation.
+            Built to support BabyQuest Foundation&apos;s mission and inform donor giving.
+          </p>
+        </section>
 
-        {/* Hero stat row */}
+        {/* National access gap */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
-            US IVF Access Gap
-          </h2>
+          <p className={`${EYEBROW} mb-3`}>US IVF access gap</p>
+          <h2 className="text-xl font-bold text-[#333333] mb-5">The national picture</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard
               value={gap?.states_without_mandate ?? '—'}
-              label="States with no IVF mandate"
+              label="States with no fertility mandate"
               sub="out of 51"
               color="text-red-600"
             />
             <StatCard
               value={gap?.states_covering_ivf ?? '—'}
               label="States that actually cover IVF"
-              sub={gap ? `${gap.pct_states_with_mandate}% of states` : ''}
+              sub={gap ? `${gap.pct_states_with_mandate}% of all states` : ''}
               color="text-green-600"
             />
             <StatCard
               value={gap?.states_with_mandate ?? '—'}
               label="States with any mandate"
-              sub="many cover diagnosis only"
+              sub="most cover diagnosis only"
               color="text-amber-600"
             />
             <StatCard
-              value="$15,000"
-              label="Average out-of-pocket IVF cost"
-              sub="per cycle, uninsured"
+              value="$16,000+"
+              label="Average IVF cost per cycle"
+              sub="plus ~$5,000 medications"
               color="text-[#333333]"
             />
           </div>
@@ -103,45 +126,96 @@ export default async function Home() {
 
         {/* Ohio profile */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
-            Ohio — Our Home State
-          </h2>
-          <div className="rounded-xl border border-[#e8e8e8] bg-[#f9f9f9] p-6 grid md:grid-cols-3 gap-6 shadow-sm">
-            <div>
-              <p className="text-xs text-[#999999] mb-1">Mandate Status</p>
-              <p className="text-xl font-bold text-amber-600">
-                {ohio?.has_mandate ? 'Mandate — but no IVF' : 'No Mandate'}
-              </p>
-              <p className="text-xs text-[#999999] mt-1">
-                Ohio requires HMOs to offer an optional infertility rider — but IVF is not covered.
-              </p>
+          <p className={`${EYEBROW} mb-3`}>Ohio — our home state</p>
+          <h2 className="text-xl font-bold text-[#333333] mb-5">Where we live, and what we face</h2>
+          <div className="rounded-xl border border-[#e8e8e8] bg-[#f9f9f9] p-6 shadow-sm">
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <div>
+                <p className="text-xs text-[#595959] mb-1">Mandate status</p>
+                <p className="text-xl font-bold text-amber-600">Mandate — but no IVF</p>
+                <p className="text-xs text-[#888888] mt-1">
+                  Ohio requires HMOs to offer an optional infertility rider — but IVF is explicitly excluded.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-[#595959] mb-1">IVF cycles started (2022)</p>
+                <p className="text-xl font-bold" style={{ color: BQ_TEAL }}>4,100</p>
+                <p className="text-xs text-[#888888] mt-1">
+                  900 cycles per million residents — vs. 3,200 in New York.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-[#595959] mb-1">Live birth rate per cycle</p>
+                <p className="text-xl font-bold text-[#333333]">40.5%</p>
+                <p className="text-xs text-[#888888] mt-1">
+                  IVF works — when people can access and afford it.
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-[#999999] mb-1">Active OH Legislation</p>
-              <p className="text-xl font-bold" style={{ color: '#3bbfbe' }}>
-                {ohio?.active_oh_bills ?? 0} bill{ohio?.active_oh_bills !== 1 ? 's' : ''}
-              </p>
-              <p className="text-xs text-[#999999] mt-1">
-                {ohio?.favorable_oh_bills ?? 0} favorable · {ohio?.restrictive_oh_bills ?? 0} restrictive
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-[#999999] mb-1">Ohio HB 38</p>
-              <p className="text-sm font-medium text-[#333333]">IVF Insurance Coverage Act</p>
-              <p className="text-xs text-[#999999] mt-1">
-                Would mandate full IVF coverage for employers with 25+ employees.
-                Currently in House Insurance Committee.
-              </p>
+
+            {/* Ohio HB 38 */}
+            <div className="border-t border-[#e8e8e8] pt-5">
+              <p className="text-xs text-[#595959] mb-2">Active Ohio legislation</p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-[#333333]">HB 38 — Ohio IVF Insurance Coverage Act</p>
+                  <p className="text-xs text-[#888888] mt-1">
+                    Would mandate full IVF coverage for employers with 25+ employees. Currently in House Insurance Committee.
+                  </p>
+                </div>
+                <span className="shrink-0 text-xs px-2 py-1 rounded-full font-medium bg-green-50 text-green-700 border border-green-200">
+                  ✓ Favorable
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* State access comparison */}
+        {cyclesPerMillion.length > 0 && (
+          <section>
+            <p className={`${EYEBROW} mb-3`}>State comparison</p>
+            <h2 className="text-xl font-bold text-[#333333] mb-2">IVF cycles per million residents</h2>
+            <p className="text-sm text-[#666666] mb-6 max-w-2xl">
+              A low number means fewer people with infertility are getting treatment — not that fewer people need it.
+              Ohio ranks among the lowest of seeded states.
+            </p>
+            <div className="space-y-3">
+              {cyclesPerMillion.map((s) => {
+                const isOhio = s.geo_name === 'Ohio'
+                const pct = Math.round(((s.value as number) / maxCycles) * 100)
+                return (
+                  <div key={s.geo_name} className="flex items-center gap-4">
+                    <span className={`text-xs font-semibold w-24 shrink-0 ${isOhio ? 'text-[#333333]' : 'text-[#888888]'}`}>
+                      {s.geo_name}
+                    </span>
+                    <div className="flex-1 bg-[#f0f0f0] rounded-full h-3 overflow-hidden">
+                      <div
+                        className="h-3 rounded-full transition-all"
+                        style={{
+                          width: `${pct}%`,
+                          backgroundColor: isOhio ? '#dc2626' : BQ_TEAL,
+                        }}
+                      />
+                    </div>
+                    <span className={`text-xs font-mono w-20 text-right shrink-0 ${isOhio ? 'text-red-600 font-bold' : 'text-[#888888]'}`}>
+                      {(s.value as number).toLocaleString()}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+            <p className="text-xs text-[#aaaaaa] mt-4 font-mono">
+              Source: CDC ART Surveillance System (NASS), 2022. Cycles per million residents.
+            </p>
+          </section>
+        )}
+
         {/* Legislation tracker */}
         {legislation.length > 0 && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
-              Active Legislation
-            </h2>
+            <p className={`${EYEBROW} mb-3`}>Policy tracker</p>
+            <h2 className="text-xl font-bold text-[#333333] mb-5">Active legislation</h2>
             <div className="space-y-3">
               {legislation.map((bill: any) => (
                 <div
@@ -179,10 +253,12 @@ export default async function Home() {
 
         {/* State mandate grid */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#999999] mb-4">
-            State Mandate Map — {mandates.length} States
-          </h2>
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+          <p className={`${EYEBROW} mb-3`}>State mandate map</p>
+          <h2 className="text-xl font-bold text-[#333333] mb-2">{mandates.length} states — coverage at a glance</h2>
+          <p className="text-sm text-[#666666] mb-6">
+            Hover any state to see its coverage level. Red = no mandate. Green = full IVF coverage.
+          </p>
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5">
             {mandates.map((state: any) => (
               <div
                 key={state.usps_code}
@@ -205,25 +281,24 @@ export default async function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-[#e8e8e8] pt-6 text-xs text-[#aaaaaa]">
+        <footer className="border-t border-[#e8e8e8] pt-6 pb-4 text-xs text-[#aaaaaa]">
           <p>
-            Data: CDC ART Surveillance (NASS), RESOLVE State Mandate Tracker, NCSL, Congress.gov.
-            {gap?.data_as_of && ` Mandate data as of ${new Date(gap.data_as_of).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.`}
+            Sources: CDC ART Surveillance System (NASS) 2022, RESOLVE State Insurance Mandate Tracker,
+            NCSL, Congress.gov, NCHS National Survey of Family Growth 2022–2023.
+            {gap?.data_as_of && ` Mandate data as of ${new Date(gap.data_as_of).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}.`}
           </p>
-          <p className="mt-2">
-            <a href="/" className="underline hover:text-[#3bbfbe] transition-colors">← Back to home</a>
+          <p className="mt-4">
+            <Link href="/" className="underline hover:text-[#3bbfbe] transition-colors">← Back to home</Link>
           </p>
         </footer>
+
       </div>
     </main>
   )
 }
 
 function StatCard({
-  value,
-  label,
-  sub,
-  color,
+  value, label, sub, color,
 }: {
   value: string | number
   label: string
@@ -233,7 +308,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-[#e8e8e8] bg-white p-5 shadow-sm">
       <p className={`text-3xl font-bold tabular-nums ${color}`}>{value}</p>
-      <p className="text-sm text-[#333333] mt-1">{label}</p>
+      <p className="text-sm font-semibold text-[#333333] mt-1">{label}</p>
       {sub && <p className="text-xs text-[#888888] mt-0.5">{sub}</p>}
     </div>
   )

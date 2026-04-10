@@ -15,10 +15,35 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://babyquest-research.vercel.app'
+const OG_IMAGE = `${SITE_URL}/Charitable-Giving.png`
+
 export const metadata: Metadata = {
-  title: 'BabyQuest — Fertility Access Platform',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'BabyQuest — Fertility Access Platform',
+    template: '%s | BabyQuest',
+  },
   description:
-    'Built by Cody and Rochelle Thomas, Spring 2026 BabyQuest grant recipients. Fertility access data, policy research, and advocacy in support of BabyQuest Foundation.',
+    '1 in 8 couples face infertility. 85% pay out of pocket. Cody & Rochelle Thomas are Spring 2026 BabyQuest grant recipients — help fund the next family.',
+  keywords: ['BabyQuest', 'IVF', 'infertility', 'fertility grant', 'IVF funding', 'donate IVF', 'fertility access'],
+  authors: [{ name: 'Cody & Rochelle Thomas' }],
+  openGraph: {
+    type: 'website',
+    url: SITE_URL,
+    siteName: 'BabyQuest Fertility Access Platform',
+    title: '1 in 8 couples face infertility. Help fund the next family.',
+    description:
+      '85% of IVF costs are paid out of pocket. Cody & Rochelle Thomas are Spring 2026 BabyQuest grant recipients building awareness for fertility access. Donate today.',
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: 'BabyQuest Foundation — Charitable Giving' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '1 in 8 couples face infertility. Help fund the next family.',
+    description:
+      '85% of IVF costs are paid out of pocket. BabyQuest grants change lives — donate today.',
+    images: [OG_IMAGE],
+  },
 }
 
 export default function RootLayout({
@@ -34,7 +59,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-[#666666]">
         <nav className="border-b border-[#e8e8e8] px-6 py-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur z-10 shadow-sm">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/babyquest-logo.png" alt="BabyQuest Foundation" width={140} height={44} className="rounded" />
+            <Image src="/babyquest-white-background.jpg" alt="BabyQuest Foundation" width={120} height={40} className="object-contain" />
             <span className="hidden sm:inline text-xs text-[#999999] font-normal">Fertility Access Platform</span>
           </Link>
           <div className="flex items-center gap-5">
