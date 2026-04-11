@@ -3,6 +3,8 @@ import Link from 'next/link'
 import EmailCapture from '@/components/EmailCapture'
 import PageViewTracker from '@/components/PageViewTracker'
 
+export const dynamic = 'force-dynamic'
+
 import { EYEBROW } from '@/lib/styles'
 
 const BQ_TEAL = '#3bbfbe'
