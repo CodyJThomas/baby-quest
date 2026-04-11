@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://baby-quest.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://baby-quest-roco.vercel.app'
 const OG_IMAGE = `${SITE_URL}/Charitable-Giving.png`
 
 export const metadata: Metadata = {

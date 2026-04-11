@@ -97,7 +97,7 @@ export default function OurStoryPage() {
           </p>
           <ShareButtons
             sourcePage="/our-story"
-            shareUrl="https://baby-quest.vercel.app/our-story"
+            shareUrl={`${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://baby-quest-roco.vercel.app'}/our-story`}
             shareText="Read Cody and Rochelle's fertility journey — and how BabyQuest Foundation made IVF possible for a family that refused to give up."
           />
         </div>

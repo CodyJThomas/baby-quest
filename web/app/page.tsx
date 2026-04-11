@@ -155,7 +155,7 @@ export default async function LandingPage() {
         <div className="mt-6">
           <ShareButtons
             sourcePage="/"
-            shareUrl="https://baby-quest.vercel.app"
+            shareUrl={process.env.NEXT_PUBLIC_SITE_URL ?? 'https://baby-quest-roco.vercel.app'}
             shareText="1 in 8 couples face infertility. 85% pay out of pocket. Learn how BabyQuest Foundation is changing that."
           />
         </div>
