@@ -1,8 +1,11 @@
 import { createServiceClient } from '@/lib/supabase'
 import Link from 'next/link'
+import EmailCapture from '@/components/EmailCapture'
+import PageViewTracker from '@/components/PageViewTracker'
+
+import { EYEBROW } from '@/lib/styles'
 
 const BQ_TEAL = '#3bbfbe'
-const EYEBROW = 'text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#595959]'
 
 async function getAccessGap() {
   const supabase = createServiceClient()
@@ -80,7 +83,7 @@ export default async function DataPage() {
 
   return (
     <main className="min-h-screen bg-white text-[#666666]">
-      <div className="max-w-6xl mx-auto px-6 py-10 space-y-12">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-10 space-y-12">
 
         {/* Page header */}
         <section className="border-b border-[#e8e8e8] pb-6">
@@ -256,7 +259,7 @@ export default async function DataPage() {
           <p className={`${EYEBROW} mb-3`}>State mandate map</p>
           <h2 className="text-xl font-bold text-[#333333] mb-2">{mandates.length} states — coverage at a glance</h2>
           <p className="text-sm text-[#666666] mb-6">
-            Hover any state to see its coverage level. Red = no mandate. Green = full IVF coverage.
+            Red = no mandate. Green = full IVF coverage.
           </p>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5">
             {mandates.map((state: any) => (
@@ -266,19 +269,39 @@ export default async function DataPage() {
                 title={`${state.state_name}: ${coverageLevelLabel[state.coverage_level] ?? 'Unknown'}`}
               >
                 <div className="text-xs font-bold text-[#333333] mb-1">{state.usps_code}</div>
-                <div className={`w-2 h-2 rounded-full mx-auto ${coverageLevelColor[state.coverage_level] ?? 'bg-[#cccccc]'}`} />
+                <div className={`w-3 h-3 rounded-full mx-auto ${coverageLevelColor[state.coverage_level] ?? 'bg-[#cccccc]'}`} />
               </div>
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-5 mt-4">
             {Object.entries(coverageLevelLabel).map(([level, label]) => (
               <div key={level} className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full ${coverageLevelColor[level]}`} />
+                <div className={`w-3 h-3 rounded-full ${coverageLevelColor[level]}`} />
                 <span className="text-xs text-[#888888]">{label}</span>
               </div>
             ))}
           </div>
         </section>
+
+        {/* Email capture */}
+        <section className="border-t border-[#e8e8e8] pt-14">
+          <div className="grid md:grid-cols-2 gap-10 items-start">
+            <div>
+              <p className={`${EYEBROW} mb-3`}>Follow along</p>
+              <h2 className="text-2xl font-bold text-[#333333] mb-4">Stay in the loop</h2>
+              <p className="text-[#666666] leading-relaxed mb-4">
+                We update this data as new research and legislation emerges. Get notified when the
+                numbers change — and when grant cycles open.
+              </p>
+              <p className="text-[#666666] leading-relaxed">
+                If you want to help — or you&apos;re facing infertility yourself — join us.
+              </p>
+            </div>
+            <EmailCapture sourcePage="/data" />
+          </div>
+        </section>
+
+        <PageViewTracker page="/data" />
 
         {/* Footer */}
         <footer className="border-t border-[#e8e8e8] pt-6 pb-4 text-xs text-[#aaaaaa]">

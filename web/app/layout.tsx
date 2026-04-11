@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Open_Sans, Geist_Mono } from 'next/font/google'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const openSans = Open_Sans({
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://babyquest-research.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://baby-quest.vercel.app'
 const OG_IMAGE = `${SITE_URL}/Charitable-Giving.png`
 
 export const metadata: Metadata = {
@@ -64,8 +65,14 @@ export default function RootLayout({
           </Link>
           <div className="flex items-center gap-5">
             <Link
+              href="/our-story"
+              className="text-xs text-[#666666] hover:text-[#3bbfbe] transition-colors font-medium py-2 px-1"
+            >
+              Our Story
+            </Link>
+            <Link
               href="/data"
-              className="text-xs text-[#666666] hover:text-[#3bbfbe] transition-colors font-medium"
+              className="text-xs text-[#666666] hover:text-[#3bbfbe] transition-colors font-medium py-2 px-1"
             >
               Research Data
             </Link>
@@ -81,6 +88,7 @@ export default function RootLayout({
           </div>
         </nav>
         {children}
+        <Analytics />
       </body>
     </html>
   )
