@@ -161,10 +161,17 @@ export default async function LandingPage() {
         </div>
         <Link
           href="/our-story"
-          className="text-sm font-medium transition-colors hover:opacity-80 block mt-3"
-          style={{ color: BQ_TEAL }}
+          className="group flex items-start gap-3 mt-5 p-4 rounded-xl border border-[#e8e8e8] hover:border-[#3bbfbe] transition-colors bg-white"
         >
-          Read our story →
+          <span className="shrink-0 text-3xl font-serif text-[#e0e0e0] leading-none select-none">&ldquo;</span>
+          <div>
+            <p className="text-sm italic text-[#666666] leading-snug">
+              There are other Rochelles and Codys out there — wondering whether this dream is still within reach.
+            </p>
+            <p className="text-xs font-semibold mt-2 transition-colors" style={{ color: BQ_TEAL }}>
+              Read our story →
+            </p>
+          </div>
         </Link>
       </section>
 
