@@ -80,6 +80,8 @@ This repo is how we do that systematically.
 - Content > code until the audience exists
 
 ## Agent routing
+Sessions run from roco-hub (C:/Users/codyj/roco-hub). Agents for this project are defined there.
+
 | Trigger | Agent |
 |---|---|
 | fertility stats, research data, CDC/NCSL data | `bq-researcher` |
