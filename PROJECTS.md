@@ -1,5 +1,5 @@
 # Baby Quest — Project Tracker
-Updated 2026-04-08
+Updated 2026-04-19
 
 ---
 
@@ -11,7 +11,9 @@ Updated 2026-04-08
 | Recipient story draft | high | draft ready | Ro reviews → submit to BabyQuest |
 | Ambassador program scope | high | pending | Cody emails Pamela |
 | Cassie consultation | high | pending | Cody calls Cassie |
-| First faceless video | high | data ready, script not started | Draft script next session |
+| First faceless video | high | data ready, script not started | Script after content workflow defined |
+| Content chapter map | high | complete 2026-04-19 | 7 Ch1 + 5 Ch2 chapters in content/chapter-map.md |
+| Content creation workflow | high | not started | Define before any production begins |
 | CDC NASS real data | high | 25 rows preliminary | Download 2022 Excel → run bq-stat-ingester |
 
 ---
