@@ -25,9 +25,9 @@ This repo is how we do that systematically.
 - Two grant cycles/year: Spring (June 8 deadline) / Fall (Sept 10 deadline)
 
 ## Local paths
-- This repo: C:/Users/codyj/baby-quest
-- Source materials: C:/Users/codyj/babyquest/ (essay, photos, video, application docs)
-- Life Hub: C:/Users/codyj/life-hub (command center — Supabase, Vercel, agent fleet)
+- This repo: `/home/codyj/baby-quest`
+- Source materials: `/home/codyj/baby-quest/content/` (essays, drafts, recipient story)
+- Life Hub: `/home/codyj/life-hub` (command center — Supabase, Vercel, agent fleet)
 
 ## Supabase
 - Same Supabase project as life-hub and research-hub
@@ -80,13 +80,15 @@ This repo is how we do that systematically.
 - Content > code until the audience exists
 
 ## Agent routing
-Sessions run from roco-hub (C:/Users/codyj/roco-hub). Agents for this project are defined there.
+Sessions run from roco-hub (`/home/codyj/roco-hub`). Agents for this project are defined there.
 
 | Trigger | Agent |
 |---|---|
 | fertility stats, research data, CDC/NCSL data | `bq-researcher` |
-| social copy, email drafts, video scripts, press pitches | `bq-content` |
-| tournament planning, donor tracking, grant cycle ops | `bq-fundraising` |
+| web ingest — state mandates, insurance coverage | `bq-web-ingester` |
+| stat file parsing — CDC NASS, SART, NCHS | `bq-stat-ingester` |
+| social copy, email drafts, content drafts | main Claude (no dedicated agent yet) |
+| tournament planning, donor ops | main Claude (no dedicated agent yet) |
 
 ## Workflow
 - Prefer small, shippable pieces
